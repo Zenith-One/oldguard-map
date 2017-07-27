@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+          .container {
+            height: 500px;
+            width: 500px;
+            margin: 30px auto;
+            padding: 0;
+          }
+        #map {
+            height: 100%;
+            width: 100%;
+        }
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        img[src="https://maps.gstatic.com/mapfiles/api-3/images/google4.png"]{
+          display:none;
+        }
+        </style>
+    </head>
+    <body>
+      <div class="container">
+        <div id="map"></div>
+      </div>
+        
+
+
+        <script>
+          var mapDiv = document.getElementById('map');
+function initMap() {
+  var map = new google.maps.Map(mapDiv, {
+    center: {lat: 0, lng: 0},
+    zoom: 1,
+    streetViewControl: false,
+    mapTypeControlOptions: {
+      mapTypeIds: []
+    }
+  });
+  window.theMap = map;
+
+  var kaleminMapType = new google.maps.ImageMapType({
+    getTileUrl: function(coord, zoom) {
+        var bound = Math.pow(2, zoom);
+        if(coord.x < 0 || coord.y < 0 || coord.x > bound -1 || coord.y > bound -1){
+            return 'map-clean/blank.png';
+        }
+        return 'map-clean/' + zoom + '/slice_' + coord.y + '_' +
+            // (bound - normalizedCoord.y - 1) + '.png';
+            coord.x + '.png';
+    },
+    tileSize: new google.maps.Size(256, 256),
+    maxZoom: 4,
+    minZoom: 1,
+    radius: 100000,
+    name: 'Kalemin'
+  });
+
+  map.mapTypes.set('kalemin', kaleminMapType);
+  map.setMapTypeId('kalemin');
+  
+  var visibility = {
+    1: {
+      zoom: 1,
+      labelZoom: 2,
+      fontSize: {
+        1: 0,
+        2: 8,
+        3: 12,
+        4: 16
+      }
+    },
+    2: {
+      zoom: 2,
+      labelZoom: 3,
+      fontSize: {
+        1: 0,
+        2: 0,
+        3: 8,
+        4: 13
+      }
+    },
+    3: {
+      zoom: 3,
+      labelZoom: 4,
+      fontSize: {
+        1: 0,
+        2: 0,
+        3: 0,
+        4: 13
+      }
+    }
+  }
+
+  var iconBase = 'icons/';
+  var icons = {
+    capitol: {
+      icon: iconBase + 'capitol',
+      visibility: visibility[1]
+    },
+    elvenVillage: {
+      icon: iconBase + 'elven-village',
+      visibility: visibility[2]
+    },
+    stronghold: {
+      icon: iconBase + 'stronghold',
+      visibility: visibility[2]
+    },
+    village: {
+      icon: iconBase + 'village',
+      visibility: visibility[3]
+    },
+    villagePort: {
+      icon: iconBase + 'village-port',
+      visibility: visibility[3]
+    }
+  };
+  
+
+  var markers = [
+    {
+      position: {lat: 79.4142, lng: -14.0086},
+      title: 'Mardhelek',
+      type: 'stronghold'
+    },{
+      position: {lat: 35.7456, lng: -56.7334},
+      title: 'Thoronel',
+      type: 'capitol'
+    },{
+      position: {lat: 23.2413, lng: -123.5303},
+      title: 'Milonel',
+      type: 'village'
+    },{
+      position: {lat: 15.4537, lng: 31.8604},
+      title: 'Heskule',
+      type: 'stronghold'
+    },{
+      position: {lat: 39.0960, lng: 46.7139},
+      title: 'Khurelmurkh',
+      type: 'stronghold'
+    },{
+      position: {lat: 45.2130, lng: 106.8311},
+      title: 'Nudinmurkh',
+      type: 'villagePort'
+    },{
+      position: {lat: 24.6870, lng: 55.5029},
+      title: 'Luthaan Anchorage',
+      type: 'villagePort'
+    },{
+      position: {lat: 9.4491, lng:122.4756},
+      title: 'Gahtal\'ganad',
+      type: 'capitol'
+    },{
+      position: {lat: -79.2700, lng:-52.8662},
+      title: 'Telyraen',
+      type: 'capitol'
+    },{
+      position: {lat:46.0122, lng:76.5527},
+      title: 'Northport',
+      type: 'stronghold'
+    },{
+      position: {lat:39.6395, lng:-7.9980},
+      title: 'Varrav Gazzan',
+      type: 'stronghold'
+    },{
+      position: {lat:35.5468, lng:15.3809},
+      title: 'Thavenor',
+      type: 'elvenVillage'
+    }, {
+      position: {lat:45.0890,lng:22.5879},
+      title: 'Barin\'s Clearing',
+      type: 'village'
+    }, {
+      position: {lat: 35.1738, lng:40.7131},
+      title: 'Wathglim',
+      type: 'villagePort'
+    }, {
+      position: {lat:51.6180, lng:71.1035},
+      title: 'E\'ladien',
+      type: 'elvenVillage'
+    },{
+      position: {lat:32.5468, lng:71.1035},
+      title: 'E\'dem Fere',
+      type: 'elvenVillage'
+    },{
+      position: {lat:-32.6209, lng:-12.1929},
+      title: 'Porthwytt',
+      type: 'villagePort'
+    },{
+      position: {lat:-81.5312,lng:93.6475},
+      title: 'She\'Rinar',
+      type: 'capitol'
+    },{
+      position: {lat:19.3941, lng:50.5811},
+      title: 'Vaerost',
+      type: 'stronghold'
+    },{
+      position: {lat:-2.1089, lng:48.4277},
+      title: 'Ikra\'las',
+      type: 'stronghold'
+    },{
+      position: {lat:-23.4028, lng:-60.6885},
+      title: 'Hyarmanel',
+      type: 'stronghold'
+    }
+  ];
+
+  markers.forEach(function(marker){
+    marker.map = map;
+    marker.label = {
+      color: 'white',
+      fontWeight: 'bold',
+      text: ' '
+    };
+    if(icons[marker.type].visibility.zoom > 1){
+      marker.visible = false;
+    }
+    marker.icon = icons[marker.type].icon + '1.png';
+    var googleMarker = new google.maps.Marker(marker);
+    console.log(googleMarker);
+    registerMarkerZoomHandler(marker, googleMarker);
+    // console.log(new google.maps.Marker(marker));
+  });
+
+  function registerMarkerZoomHandler(marker,googleMarker){
+    google.maps.event.addListener(map, 'zoom_changed', function(){
+      // console.log(icons[marker.type].zoom,map.getZoom());
+      var zoom = map.getZoom();
+      if(zoom < icons[marker.type].visibility.zoom){
+        console.log('hiding',googleMarker);
+        googleMarker.setVisible(false);
+      } else {
+        console.log('showing',googleMarker);
+        googleMarker.setVisible(true);
+      }
+
+      if(zoom < icons[marker.type].visibility.labelZoom){
+        googleMarker.setLabel({text:' ',color:'white',fontWeight:'bold'});
+      } else {
+        googleMarker.setLabel({
+          color: 'white',
+          fontWeight: 'bold',
+          fontSize: icons[marker.type].visibility.fontSize[zoom] + 'px',
+          text: marker.title
+        });
+
+      }
+
+      googleMarker.setIcon(icons[marker.type].icon + zoom + '.png');
+      if(marker.type === 'capitol'){
+        console.log('icon?',icons[marker.type].icon + zoom + '.png',zoom);
+      }
+
+      // googleMarker.changed();
+    });
+  }
+
+  var allowedBoundsRaw = {
+    1: {min: { lat: -30, lng: -50}, max: {lat: 30, lng: 50}},
+    2: {min: { lat: -70, lng: -99}, max: {lat: 70, lng: 99}},
+    3: {min: { lat: -79.75, lng: -138.6}, max: { lat: 79.75, lng: 138.6}},
+    4: {min: { lat: -83, lng: -159}, max: { lat: 83, lng: 159}}
+  }
+
+  var allowedBounds = {
+    1: new google.maps.LatLngBounds(
+      new google.maps.LatLng(-30,-50),
+      new google.maps.LatLng(30,50)
+    ),
+    2: new google.maps.LatLngBounds(
+      new google.maps.LatLng(-70,-99),
+      new google.maps.LatLng(70,99)
+    ),
+    3: new google.maps.LatLngBounds(
+      new google.maps.LatLng(-79.75,-138.6),
+      new google.maps.LatLng(79.75,138.6)
+    ),
+    4: new google.maps.LatLngBounds(
+      new google.maps.LatLng(-83,-159),
+      new google.maps.LatLng(83,159)
+    )
+  };
+
+  google.maps.event.addListener(map, 'center_changed', function(){
+    panToNearestBound(map);
+    // var zoom = map.getZoom();
+    // if(allowedBounds[zoom].contains(map.getCenter())){
+    //   lastValidCenter = map.getCenter();
+    //   return;
+    // }
+    // map.panTo(lastValidCenter);
+  });
+
+  google.maps.event.addListener(map, 'zoom_changed', function(){
+    panToNearestBound(map);
+  });
+
+  function panToNearestBound(map){
+    var zoom = map.getZoom();
+    var center = map.getCenter();
+    if(allowedBounds[zoom].contains(center)){
+      lastValidCenter = center;
+      return;
+    }
+    var lat = center.lat();
+    var lng = center.lng();
+    var newCenter = {lat: 0, lng: 0};
+    var allowedRaw = allowedBoundsRaw[zoom];
+    if(allowedRaw.min.lat > lat){
+      newCenter.lat = allowedRaw.min.lat;
+    } else if (allowedRaw.max.lat < lat){
+      newCenter.lat = allowedRaw.max.lat;
+    } else {
+      newCenter.lat = lat;
+    }
+    if(allowedRaw.min.lng > lng){
+      newCenter.lng = allowedRaw.min.lng;
+    } else if (allowedRaw.max.lng < lng){
+      newCenter.lng = allowedRaw.max.lng;
+    } else {
+      newCenter.lng = lng;
+    }
+    var latLng = new google.maps.LatLng(newCenter.lat, newCenter.lng);
+    map.panTo(latLng);
+  }
+
+  google.maps.event.addListener(map, 'click', function (event) {
+    displayCoordinates(event.latLng);               
+  });
+
+  function displayCoordinates(pnt) {
+    var lat = pnt.lat();
+    lat = lat.toFixed(4);
+    var lng = pnt.lng();
+    lng = lng.toFixed(4);
+    console.log("Latitude: " + lat + "  Longitude: " + lng);
+  }
+}
+
+</script>
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD_DfL9I3bFcdc6_S9oC2aPCpt_uh_O0-U&callback=initMap"
+    async defer></script>
+    </body>
+</html>
